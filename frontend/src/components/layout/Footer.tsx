@@ -16,6 +16,7 @@ const companyLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Advertise', href: '/advertise' },
+  { label: 'Investors', href: '/investors' },
   { label: 'Press Release', href: '/press' },
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },

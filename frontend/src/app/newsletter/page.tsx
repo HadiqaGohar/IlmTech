@@ -28,6 +28,7 @@ const categoryPrefs = [
 
 export default function NewsletterPage() {
   const [subscribed, setSubscribed] = useState(false);
+  const [email, setEmail] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['AI & Cloud Computing', 'IT News & Industry']);
 
   const toggleCategory = (cat: string) => {
@@ -68,7 +69,7 @@ export default function NewsletterPage() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Subscribe to Our Newsletter</h2>
                 <p className="mt-2 text-gray-600 dark:text-gray-400">Free, weekly, and packed with value. No spam, ever.</p>
                 <form className="mt-6 flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onSubmit={(e) => { e.preventDefault(); setSubscribed(true); }}>
-                  <Input type="email" placeholder="Enter your email address" className="flex-1" required />
+                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" className="flex-1" required />
                   <Button type="submit">
                     <Send className="w-4 h-4 mr-2" />
                     Subscribe

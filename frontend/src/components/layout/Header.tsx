@@ -90,12 +90,13 @@ const Header: React.FC = () => {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2">
-              <button
+              <Link
+                href="/search"
                 className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#37215F] dark:hover:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
-              </button>
+              </Link>
 
               <button
                 onClick={toggleDarkMode}

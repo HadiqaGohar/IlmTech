@@ -1,191 +1,144 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Search, Mail, Building2, Users, Globe, ChevronDown, MapPin, Filter } from 'lucide-react';
-import Breadcrumb from '@/components/layout/Breadcrumb';
-import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Input';
-import { startups } from '@/lib/mockData';
+import React, { useState, useMemo } from 'react';
+import { startups, TAGS } from '@/lib/mockData';
+import { Search, Filter, MapPin, DollarSign, Users, Building2, X } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
+import Breadcrumb from '@/components/layout/Breadcrumb';
 
-const SECTORS = ['All', 'Fintech', 'E-Commerce', 'Transportation', 'SaaS', 'Communications', 'Logistics'];
-const FUNDING_STAGES = ['All', 'Seed', 'Series A', 'Series B'];
-const LOCATIONS = ['All', 'Karachi', 'Lahore', 'Islamabad', 'Peshawar'];
+const SECTORS = [...new Set(startups.map((s) => s.sector))];
+const FUNDING_STAGES = [...new Set(startups.map((s) => s.fundingStage))];
+const CITIES = [...new Set(startups.map((s) => s.city))];
 
 export default function StartupDirectoryPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSector, setSelectedSector] = useState('All');
-  const [selectedFunding, setSelectedFunding] = useState('All');
-  const [selectedLocation, setSelectedLocation] = useState('All');
+  const [search, setSearch] = useState('');
+  const [selectedSector, setSelectedSector] = useState('all');
+  const [selectedStage, setSelectedStage] = useState('all');
+  const [selectedCity, setSelectedCity] = useState('all');
 
-  const filteredStartups = startups.filter((s) => {
-    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.sector.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSector = selectedSector === 'All' || s.sector === selectedSector;
-    const matchesFunding = selectedFunding === 'All' || s.funding.includes(selectedFunding);
-    return matchesSearch && matchesSector && matchesFunding;
-  });
+  const filtered = useMemo(() => {
+    return startups.filter((s) => {
+      const matchesSearch = !search || s.name.toLowerCase().includes(search.toLowerCase()) || s.sector.toLowerCase().includes(search.toLowerCase()) || s.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
+      const matchesSector = selectedSector === 'all' || s.sector === selectedSector;
+      const matchesStage = selectedStage === 'all' || s.fundingStage === selectedStage;
+      const matchesCity = selectedCity === 'all' || s.city === selectedCity;
+      return matchesSearch && matchesSector && matchesStage && matchesCity;
+    });
+  }, [search, selectedSector, selectedStage, selectedCity]);
+
+  const clearFilters = () => {
+    setSearch('');
+    setSelectedSector('all');
+    setSelectedStage('all');
+    setSelectedCity('all');
+  };
+
+  const hasFilters = search || selectedSector !== 'all' || selectedStage !== 'all' || selectedCity !== 'all';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-br from-emerald-600 to-green-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-10">
-          <Breadcrumb items={[{ label: 'Startup Directory' }]} />
-          <div className="mt-6 flex items-center gap-4">
-            <div className="p-4 bg-white/10 rounded-2xl">
-              <Building2 className="w-10 h-10" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold">Startup Directory</h1>
-              <p className="mt-2 text-green-200 max-w-2xl">
-                Explore Pakistan's top startups. Filter by sector, funding stage, and location to find the companies shaping the future.
-              </p>
-            </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-emerald-600 to-teal-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Startup Directory' }]} />
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mt-4">Startup Directory</h1>
+          <p className="text-emerald-100 mt-2 max-w-2xl">Discover Pakistan&apos;s thriving startup ecosystem — from pre-seed to Series C</p>
+
+          {/* Search */}
+          <div className="relative mt-6 max-w-xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search startups by name, sector, or tag..."
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/95 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+            />
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Search & Filters */}
-        <Card className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="md:col-span-2">
-              <Input
-                icon={<Search className="w-4 h-4" />}
-                placeholder="Search startups..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <select
-                value={selectedSector}
-                onChange={(e) => setSelectedSector(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-              >
-                {SECTORS.map((s) => (
-                  <option key={s} value={s}>{s === 'All' ? 'All Sectors' : s}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-            <div className="relative">
-              <select
-                value={selectedFunding}
-                onChange={(e) => setSelectedFunding(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-              >
-                {FUNDING_STAGES.map((s) => (
-                  <option key={s} value={s}>{s === 'All' ? 'All Funding' : s}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-          </div>
-        </Card>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Showing {filteredStartups.length} startup{filteredStartups.length !== 1 ? 's' : ''}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredStartups.map((startup) => (
-                <Link key={startup.id} href={`/startup-directory/${startup.id}`}>
-                  <Card hover className="h-full">
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
-                        <Building2 className="w-7 h-7 text-emerald-500" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                          {startup.name}
-                        </h3>
-                        <Badge variant="green" size="sm">{startup.sector}</Badge>
-                      </div>
-                    </div>
-                    <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                      {startup.description}
-                    </p>
-                    <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <span className="font-medium text-emerald-600 dark:text-emerald-400">{startup.funding}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <Users className="w-4 h-4" />
-                        {startup.employees} employees
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <Globe className="w-4 h-4" />
-                        Founded {startup.founded}
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <MapPin className="w-4 h-4" />
-                        {startup.founder}
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-
-            {filteredStartups.length === 0 && (
-              <div className="text-center py-12">
-                <Building2 className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400">No startups found matching your criteria.</p>
-                <Button variant="ghost" className="mt-4" onClick={() => { setSearchQuery(''); setSelectedSector('All'); setSelectedFunding('All'); }}>
-                  Clear Filters
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Categories */}
-            <Card>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-                <Filter className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                Categories
-              </h3>
-              <div className="space-y-2">
-                {CATEGORIES.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/${cat.slug}`}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
-                  >
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }} />
-                    <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                      {cat.label}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </Card>
-
-            {/* Newsletter */}
-            <Card className="bg-gradient-to-br from-emerald-600 to-green-700 text-white border-0">
-              <Mail className="w-8 h-8 mb-3" />
-              <h3 className="text-lg font-bold">Startup Updates</h3>
-              <p className="mt-2 text-sm text-green-200">Get weekly startup news and funding alerts.</p>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="mt-4 w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-green-300 text-sm focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-              <Button className="mt-3 w-full bg-white text-emerald-700 hover:bg-green-50">
-                Subscribe
-              </Button>
-            </Card>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+          <Filter className="w-4 h-4 text-gray-500" />
+          <select value={selectedSector} onChange={(e) => setSelectedSector(e.target.value)} className="px-3 py-1.5 rounded-lg text-sm border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <option value="all">All Sectors</option>
+            {SECTORS.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={selectedStage} onChange={(e) => setSelectedStage(e.target.value)} className="px-3 py-1.5 rounded-lg text-sm border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <option value="all">All Stages</option>
+            {FUNDING_STAGES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} className="px-3 py-1.5 rounded-lg text-sm border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <option value="all">All Cities</option>
+            {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          {hasFilters && (
+            <button onClick={clearFilters} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+              <X className="w-3.5 h-3.5" />
+              Clear Filters
+            </button>
+          )}
+          <span className="ml-auto text-sm text-gray-500 dark:text-gray-400">{filtered.length} startups</span>
         </div>
+
+        {/* Startup Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filtered.map((startup) => (
+            <div key={startup.id} className="p-5 rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 hover:shadow-xl hover:border-emerald-200 dark:hover:border-emerald-800 transition-all duration-300">
+              <div className="flex items-start gap-4 mb-4">
+                <img src={startup.logo} alt={startup.name} className="w-14 h-14 rounded-xl shadow-md" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-base">{startup.name}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{startup.sector}</p>
+                </div>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">{startup.fundingStage}</span>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed">{startup.description}</p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {startup.tags.slice(0, 3).map((tag) => (
+                  <span key={tag} className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">{tag}</span>
+                ))}
+              </div>
+              <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <div className="flex items-center gap-1 text-sm">
+                  <DollarSign className="w-4 h-4 text-green-500" />
+                  <span className="font-semibold text-gray-900 dark:text-white">{startup.funding}</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {startup.city}
+                </div>
+                <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
+                  <Users className="w-3.5 h-3.5" />
+                  {startup.employees}+
+                </div>
+              </div>
+              {startup.fundingRounds.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Funding History</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {startup.fundingRounds.map((round, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                        {round.round}: {round.amount}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-16">
+            <Building2 className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No startups found</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Try adjusting your filters</p>
+            <button onClick={clearFilters} className="px-4 py-2 rounded-lg bg-[#37215F] text-white text-sm font-medium hover:bg-[#2a1a4a] transition-colors">Clear All Filters</button>
+          </div>
+        )}
       </div>
     </div>
   );
