@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { articles } from '@/lib/mockData';
 import { CATEGORIES } from '@/lib/constants';
 import { formatDate, truncate } from '@/lib/utils';
-import { Clock, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight, TrendingUp } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
   const featuredArticle = articles.find((a) => a.isFeatured);
@@ -22,34 +22,38 @@ const HeroSection: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Featured Article - 60% */}
         <Link
-          href={`/news/${featuredArticle.category}/${featuredArticle.slug}`}
-          className="lg:col-span-3 group"
+          href={`/article/${featuredArticle.slug}`}
+          className="lg:col-span-3 group block"
         >
-          <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 aspect-[16/10]">
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-            <div className="absolute top-4 left-4">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#37215F] to-[#0881BE] aspect-[16/10] shadow-xl">
+            <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300" />
+            <div className="absolute top-4 left-4 z-10">
               <span
-                className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium text-white"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold text-white shadow-lg"
                 style={{ backgroundColor: getCategoryColor(featuredArticle.category) }}
               >
+                <TrendingUp className="w-3 h-3" />
                 {CATEGORIES.find((c) => c.slug === featuredArticle.category)?.label}
               </span>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors leading-tight">
                 {featuredArticle.title}
               </h1>
-              <p className="text-gray-200 text-sm md:text-base mb-3 hidden sm:block">
-                {truncate(featuredArticle.excerpt, 150)}
+              <p className="text-gray-200 text-sm md:text-base mb-4 hidden sm:block line-clamp-2">
+                {truncate(featuredArticle.excerpt, 160)}
               </p>
               <div className="flex items-center gap-3 text-gray-300 text-sm">
-                <span>{featuredArticle.author.name}</span>
-                <span>·</span>
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold">
+                  {featuredArticle.author.name.charAt(0)}
+                </div>
+                <span className="font-medium">{featuredArticle.author.name}</span>
+                <span className="text-gray-500">·</span>
                 <span>{formatDate(featuredArticle.publishedAt)}</span>
-                <span>·</span>
+                <span className="text-gray-500">·</span>
                 <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {featuredArticle.readTime} min
+                  <Clock className="w-3.5 h-3.5" />
+                  {featuredArticle.readTime} min read
                 </span>
               </div>
             </div>
@@ -61,32 +65,37 @@ const HeroSection: React.FC = () => {
           {sideArticles.map((article) => (
             <Link
               key={article.id}
-              href={`/news/${article.category}/${article.slug}`}
-              className="group flex gap-4 p-3 rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              href={`/article/${article.slug}`}
+              className="group flex gap-4 p-4 rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg hover:border-purple-200 dark:hover:border-purple-800 transition-all duration-200"
             >
-              <div className="w-28 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                <span className="text-white text-xs font-medium text-center px-2 opacity-80">
+              <div className="w-28 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-[#37215F] to-[#0881BE] flex items-center justify-center shadow-inner">
+                <span className="text-white text-xs font-semibold text-center px-2 opacity-90">
                   {CATEGORIES.find((c) => c.slug === article.category)?.label}
                 </span>
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2">
-                  {article.title}
-                </h3>
-                <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-[#37215F] dark:group-hover:text-purple-400 transition-colors line-clamp-2 leading-snug">
+                    {article.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1 hidden sm:block">
+                    {truncate(article.excerpt, 80)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 mt-2">
                   <span>{formatDate(article.publishedAt)}</span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {article.readTime} min
+                    {article.readTime}m
                   </span>
                 </div>
               </div>
             </Link>
           ))}
           <Link
-            href="/news"
-            className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
+            href="/it-news"
+            className="flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-[#37215F] dark:text-purple-400 hover:text-[#0881BE] dark:hover:text-blue-400 transition-colors rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20"
           >
             View All News
             <ArrowRight className="w-4 h-4" />

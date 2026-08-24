@@ -1,78 +1,71 @@
 import React from 'react';
 import { articles } from '@/lib/mockData';
-import { TrendingUp, Mail, Eye } from 'lucide-react';
-import Card from '@/components/ui/Card';
-import AdBanner from './AdBanner';
+import { formatDate } from '@/lib/utils';
+import { TrendingUp, Mail, ArrowRight } from 'lucide-react';
 
-const TrendingWidget: React.FC = () => {
+const SidebarWidgets: React.FC = () => {
   const trendingArticles = [...articles]
     .sort((a, b) => b.views - a.views)
     .slice(0, 5);
 
   return (
-    <Card>
-      <div className="flex items-center gap-2 mb-4">
-        <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-        <h3 className="font-bold text-gray-900 dark:text-white">Trending Now</h3>
-      </div>
-      <ol className="space-y-3">
-        {trendingArticles.map((article, index) => (
-          <li key={article.id} className="flex gap-3 group">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-xs font-bold text-purple-600 dark:text-purple-400">
-              {index + 1}
-            </span>
-            <div className="min-w-0">
-              <a
-                href={`/news/${article.category}/${article.slug}`}
-                className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors line-clamp-2"
-              >
-                {article.title}
-              </a>
-              <div className="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
-                <Eye className="w-3 h-3" />
-                {article.views.toLocaleString()} views
-              </div>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </Card>
-  );
-};
-
-const NewsletterWidget: React.FC = () => {
-  return (
-    <Card>
-      <div className="flex items-center gap-2 mb-3">
-        <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-        <h3 className="font-bold text-gray-900 dark:text-white">Stay Updated</h3>
-      </div>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        Get the latest tech news delivered to your inbox.
-      </p>
-      <form className="space-y-2">
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-        />
-        <button
-          type="submit"
-          className="w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 transition-colors"
-        >
-          Subscribe
-        </button>
-      </form>
-    </Card>
-  );
-};
-
-const SidebarWidgets: React.FC = () => {
-  return (
     <div className="space-y-6">
-      <TrendingWidget />
-      <NewsletterWidget />
-      <AdBanner size="sidebar" />
+      {/* Trending Widget */}
+      <div className="rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-5 h-5 text-[#37215F] dark:text-purple-400" />
+          <h3 className="font-bold text-gray-900 dark:text-white text-lg">Trending Now</h3>
+        </div>
+        <div className="space-y-3">
+          {trendingArticles.map((article, index) => (
+            <a
+              key={article.id}
+              href={`/article/${article.slug}`}
+              className="flex gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group"
+            >
+              <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-[#37215F] to-[#0881BE] flex items-center justify-center text-white text-sm font-bold">
+                {index + 1}
+              </span>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-[#37215F] dark:group-hover:text-purple-400 transition-colors line-clamp-2 leading-snug">
+                  {article.title}
+                </h4>
+                <span className="text-xs text-gray-400 dark:text-gray-500 mt-1 block">
+                  {formatDate(article.publishedAt)}
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Newsletter Widget */}
+      <div className="rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-5 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <Mail className="w-5 h-5 text-[#0881BE]" />
+          <h3 className="font-bold text-gray-900 dark:text-white text-lg">Stay Updated</h3>
+        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Get the latest tech news delivered to your inbox every week.
+        </p>
+        <div className="flex gap-2">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0881BE] focus:border-transparent"
+          />
+          <button className="px-4 py-2.5 rounded-xl bg-[#37215F] hover:bg-[#2a1a4a] dark:bg-purple-600 dark:hover:bg-purple-700 text-white text-sm font-semibold transition-colors flex items-center gap-1.5 shadow-md hover:shadow-lg">
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Ad Banner */}
+      <div className="rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 h-[250px] flex items-center justify-center">
+          <span className="text-gray-400 dark:text-gray-500 text-sm font-medium">Advertisement</span>
+        </div>
+      </div>
     </div>
   );
 };

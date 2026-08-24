@@ -1,85 +1,60 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { startups } from '@/lib/mockData';
-import { ArrowRight, ChevronLeft, ChevronRight, Building2 } from 'lucide-react';
+import { ArrowRight, DollarSign, Users } from 'lucide-react';
 
 const StartupShowcase: React.FC = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const displayStartups = startups.slice(0, 6);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 280;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Startup Showcase</h2>
-        <div className="flex items-center gap-3">
-          {/* Scroll Arrows - Mobile */}
-          <div className="flex gap-1 lg:hidden">
-            <button
-              onClick={() => scroll('left')}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              className="p-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </button>
-          </div>
-          <Link
-            href="/startups"
-            className="flex items-center gap-1 text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
-          >
-            View Directory
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Startup Showcase</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Discover Pakistan&apos;s thriving startup ecosystem</p>
         </div>
+        <Link
+          href="/startup-directory"
+          className="flex items-center gap-1.5 text-sm font-semibold text-[#37215F] dark:text-purple-400 hover:text-[#0881BE] dark:hover:text-blue-400 transition-colors"
+        >
+          View Directory
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
 
-      {/* Mobile: Horizontal Scroll */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide lg:grid lg:grid-cols-3 lg:overflow-visible lg:pb-0"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {displayStartups.map((startup) => (
-          <Link
+          <div
             key={startup.id}
-            href={`/startups/${startup.id}`}
-            className="flex-shrink-0 w-[260px] lg:w-auto group p-4 rounded-xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg transition-shadow"
+            className="group p-5 rounded-2xl border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 hover:shadow-xl hover:border-purple-200 dark:hover:border-purple-800 transition-all duration-300"
           >
-            {/* Logo Placeholder */}
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center mb-3">
-              <Building2 className="w-6 h-6 text-white" />
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#37215F] to-[#0881BE] flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                {startup.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-gray-900 dark:text-white text-base group-hover:text-[#37215F] dark:group-hover:text-purple-400 transition-colors">
+                  {startup.name}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{startup.sector}</p>
+              </div>
             </div>
-
-            <h3 className="font-bold text-gray-900 dark:text-white text-base group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors mb-1">
-              {startup.name}
-            </h3>
-            <p className="text-sm text-purple-600 dark:text-purple-400 font-medium mb-2">
-              {startup.sector}
+            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4 leading-relaxed">
+              {startup.description}
             </p>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-green-600 dark:text-green-400 font-semibold">
-                {startup.funding}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {startup.founder}
-              </span>
+            <div className="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-1.5 text-sm">
+                <DollarSign className="w-4 h-4 text-green-500" />
+                <span className="font-semibold text-gray-900 dark:text-white">{startup.funding}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+                <Users className="w-4 h-4" />
+                <span>{startup.employees}+</span>
+              </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </section>
