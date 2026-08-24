@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ilmtech-frontend:
+    build: ./frontend
+    container_name: ilmtech-frontend
+    restart: unless-stopped
+    ports:
+      - "3006:3000"
+    networks:
+      - pilotron-net
+
+networks:
+  pilotron-net:
+    external: true
