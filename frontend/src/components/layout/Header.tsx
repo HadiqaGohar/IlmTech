@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, ChevronDown, Globe } from 'lucide-react';
 import { NAV_ITEMS } from '@/lib/constants';
 import MobileNav from './MobileNav';
 
@@ -10,6 +10,7 @@ const Header: React.FC = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -105,6 +106,35 @@ const Header: React.FC = () => {
               >
                 {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
+
+              {/* Language Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowLangMenu(!showLangMenu)}
+                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#37215F] dark:hover:text-purple-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-1"
+                  aria-label="Change language"
+                >
+                  <Globe className="w-5 h-5" />
+                  <span className="text-xs font-medium hidden sm:inline">EN</span>
+                </button>
+                {showLangMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                    {[
+                      { code: 'EN', label: 'English', flag: '🇬🇧' },
+                      { code: 'UR', label: 'اردو', flag: '🇵🇰' },
+                      { code: 'HI', label: 'हिन्दी', flag: '🇮🇳' },
+                      { code: 'ES', label: 'Español', flag: '🇪🇸' },
+                      { code: 'ZH', label: '中文', flag: '🇨🇳' },
+                    ].map((lang) => (
+                      <button key={lang.code} onClick={() => setShowLangMenu(false)} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <span>{lang.flag}</span>
+                        <span>{lang.label}</span>
+                        <span className="text-[10px] text-gray-400 ml-auto">{lang.code}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <Link
                 href="/login"

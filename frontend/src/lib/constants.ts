@@ -13,8 +13,18 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: 'Startups', href: '/startups' },
-  { label: 'Startup Directory', href: '/startup-directory' },
+  { label: 'Directory', href: '/startup-directory' },
   { label: 'Live Show', href: '/live-shows' },
+  { label: 'More', href: '#', children: [
+    { label: 'Podcast', href: '/podcast' },
+    { label: 'Tech Map', href: '/tech-map' },
+    { label: 'Annual Report', href: '/state-of-pak-tech' },
+    { label: 'Founder Diaries', href: '/founder-diaries/sadapay-founder-journey' },
+    { label: 'Jobs', href: '/jobs' },
+    { label: 'Events', href: '/events' },
+    { label: 'Investors', href: '/investors' },
+    { label: 'Ask AI', href: '/ask-ai' },
+  ]},
   { label: 'About', href: '/about' },
 ];
 

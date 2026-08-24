@@ -10,6 +10,10 @@ const quickLinks = [
   { label: 'AI & Cloud', href: '/ai-cloud' },
   { label: 'Reviews', href: '/reviews' },
   { label: 'Live Show', href: '/live-shows' },
+  { label: 'Podcast', href: '/podcast' },
+  { label: 'Jobs', href: '/jobs' },
+  { label: 'Events', href: '/events' },
+  { label: 'Ask AI', href: '/ask-ai' },
 ];
 
 const companyLinks = [
@@ -17,6 +21,8 @@ const companyLinks = [
   { label: 'Contact', href: '/contact' },
   { label: 'Advertise', href: '/advertise' },
   { label: 'Investors', href: '/investors' },
+  { label: 'Tech Map', href: '/tech-map' },
+  { label: 'Annual Report', href: '/state-of-pak-tech' },
   { label: 'Press Release', href: '/press' },
   { label: 'Privacy Policy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },

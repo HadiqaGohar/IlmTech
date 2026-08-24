@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BreakingTicker from "@/components/layout/BreakingTicker";
+import AIAssistant from '@/components/ai-assistant/AIAssistant';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <BreakingTicker />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <AIAssistant />
       </body>
     </html>
   );
