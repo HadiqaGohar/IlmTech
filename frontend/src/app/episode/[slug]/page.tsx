@@ -56,7 +56,7 @@ export default function EpisodePage() {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <Breadcrumb
           items={[
-            { label: 'Live Shows', href: '/live' },
+            { label: 'Live Shows', href: '/live-shows' },
             { label: episode.title },
           ]}
         />

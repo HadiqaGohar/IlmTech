@@ -4,11 +4,12 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
-  { label: 'IT News', href: '/news/it-news' },
+  { label: 'IT News', href: '/it-news' },
   { label: 'Startups', href: '/startups' },
-  { label: 'Cybersecurity', href: '/news/cybersecurity' },
-  { label: 'AI & Cloud', href: '/news/ai-cloud' },
-  { label: 'Reviews', href: '/news/reviews' },
+  { label: 'Cybersecurity', href: '/cybersecurity' },
+  { label: 'AI & Cloud', href: '/ai-cloud' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'Live Show', href: '/live-shows' },
 ];
 
 const companyLinks = [

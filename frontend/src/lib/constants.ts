@@ -4,16 +4,17 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   {
     label: 'News',
-    href: '/news',
+    href: '/it-news',
     children: [
-      { label: 'IT News', href: '/news/it-news' },
-      { label: 'Cybersecurity', href: '/news/cybersecurity' },
-      { label: 'AI & Cloud', href: '/news/ai-cloud' },
-      { label: 'Reviews', href: '/news/reviews' },
+      { label: 'IT News', href: '/it-news' },
+      { label: 'Cybersecurity', href: '/cybersecurity' },
+      { label: 'AI & Cloud', href: '/ai-cloud' },
+      { label: 'Reviews', href: '/reviews' },
     ],
   },
   { label: 'Startups', href: '/startups' },
-  { label: 'Live Show', href: '/live' },
+  { label: 'Startup Directory', href: '/startup-directory' },
+  { label: 'Live Show', href: '/live-shows' },
   { label: 'About', href: '/about' },
 ];
 

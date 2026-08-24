@@ -112,7 +112,7 @@ export default function ArticlePage() {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <Breadcrumb
           items={[
-            { label: category?.label || article.category, href: `/news/${article.category}` },
+            { label: category?.label || article.category, href: `/${article.category}` },
             { label: article.title },
           ]}
         />
