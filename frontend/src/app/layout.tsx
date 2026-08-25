@@ -17,34 +17,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IlmTech - Islamic Technology News & Knowledge",
-  description:
-    "Your trusted source for Islamic technology news, Islamic finance, halal tech reviews, and knowledge bridging faith with innovation.",
-  keywords: [
-    "Islamic technology",
-    "halal tech",
-    "Islamic finance",
-    "Muslim tech news",
-    "faith and technology",
-  ],
+  title: {
+    default: "IlmTech — Pakistan's #1 Tech News & Startup Portal",
+    template: '%s | IlmTech',
+  },
+  description: "Pakistan's leading technology news, startup stories, AI insights, and digital ecosystem coverage.",
+  keywords: ['Pakistan tech', 'startups', 'AI', 'cybersecurity', 'funding', 'IT news'],
   openGraph: {
-    title: "IlmTech - Islamic Technology News & Knowledge",
-    description:
-      "Your trusted source for Islamic technology news, Islamic finance, halal tech reviews, and knowledge bridging faith with innovation.",
-    type: "website",
-    locale: "en_US",
-    siteName: "IlmTech",
+    title: "IlmTech — Pakistan's #1 Tech News & Startup Portal",
+    description: "Pakistan's leading technology news, startup stories, AI insights, and digital ecosystem coverage.",
+    url: 'https://ilmtech.pk',
+    siteName: 'IlmTech',
+    locale: 'en_US',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "IlmTech - Islamic Technology News & Knowledge",
-    description:
-      "Your trusted source for Islamic technology news, Islamic finance, halal tech reviews, and knowledge bridging faith with innovation.",
+    card: 'summary_large_image',
+    title: "IlmTech — Pakistan's #1 Tech News",
+    description: "Pakistan's leading technology news, startup stories, and digital ecosystem coverage.",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

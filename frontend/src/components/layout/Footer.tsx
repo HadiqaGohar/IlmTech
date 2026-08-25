@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
@@ -29,6 +31,17 @@ const companyLinks = [
 ];
 
 const Footer: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitted(true);
+    setEmail('');
+    setTimeout(() => setSubmitted(false), 3000);
+  };
+
   return (
     <footer className="bg-gray-900 dark:bg-gray-950 text-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -146,19 +159,30 @@ const Footer: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-white mb-2">Subscribe to newsletter</p>
-              <form className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 min-w-0 px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#0881BE]"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-[#0881BE] hover:bg-[#066d9e] rounded-r-lg transition-colors shrink-0"
-                >
-                  Subscribe
-                </button>
-              </form>
+              {submitted ? (
+                <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <span className="text-sm font-medium text-green-400">
+                    Thanks for subscribing! 🎉
+                  </span>
+                </div>
+              ) : (
+                <form className="flex" onSubmit={handleSubscribe}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Your email"
+                    required
+                    className="flex-1 min-w-0 px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-l-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#0881BE]"
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium text-white bg-[#0881BE] hover:bg-[#066d9e] rounded-r-lg transition-colors shrink-0"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </div>

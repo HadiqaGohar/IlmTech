@@ -11,6 +11,7 @@ const Header: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('EN');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,10 +27,24 @@ const Header: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    html.setAttribute('lang', currentLanguage === 'UR' ? 'ur' : 'en');
+    html.setAttribute('dir', currentLanguage === 'UR' ? 'rtl' : 'ltr');
+  }, [currentLanguage]);
+
   const toggleDarkMode = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
   };
+
+  const languages = [
+    { code: 'EN', label: 'English', flag: '🇬🇧' },
+    { code: 'UR', label: 'اردو', flag: '🇵🇰' },
+    { code: 'HI', label: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'ES', label: 'Español', flag: '🇪🇸' },
+    { code: 'ZH', label: '中文', flag: '🇨🇳' },
+  ];
 
   return (
     <>
@@ -115,18 +130,23 @@ const Header: React.FC = () => {
                   aria-label="Change language"
                 >
                   <Globe className="w-5 h-5" />
-                  <span className="text-xs font-medium hidden sm:inline">EN</span>
+                  <span className="text-xs font-medium hidden sm:inline">{currentLanguage}</span>
                 </button>
                 {showLangMenu && (
                   <div className="absolute top-full right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
-                    {[
-                      { code: 'EN', label: 'English', flag: '🇬🇧' },
-                      { code: 'UR', label: 'اردو', flag: '🇵🇰' },
-                      { code: 'HI', label: 'हिन्दी', flag: '🇮🇳' },
-                      { code: 'ES', label: 'Español', flag: '🇪🇸' },
-                      { code: 'ZH', label: '中文', flag: '🇨🇳' },
-                    ].map((lang) => (
-                      <button key={lang.code} onClick={() => setShowLangMenu(false)} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    {languages.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setCurrentLanguage(lang.code);
+                          setShowLangMenu(false);
+                        }}
+                        className={`w-full flex items-center gap-2 px-4 py-2 text-sm transition-colors ${
+                          currentLanguage === lang.code
+                            ? 'bg-[#37215F] text-white dark:bg-purple-600'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
                         <span>{lang.flag}</span>
                         <span>{lang.label}</span>
                         <span className="text-[10px] text-gray-400 ml-auto">{lang.code}</span>

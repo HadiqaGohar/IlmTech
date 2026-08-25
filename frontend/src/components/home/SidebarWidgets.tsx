@@ -1,5 +1,6 @@
 import React from 'react';
 import { articles } from '@/lib/mockData';
+import { CATEGORIES } from '@/lib/constants';
 import { formatDate } from '@/lib/utils';
 import { TrendingUp, Mail, ArrowRight } from 'lucide-react';
 
@@ -7,6 +8,14 @@ const SidebarWidgets: React.FC = () => {
   const trendingArticles = [...articles]
     .sort((a, b) => b.views - a.views)
     .slice(0, 5);
+
+  const getCategoryColor = (slug: string) => {
+    return CATEGORIES.find((c) => c.slug === slug)?.color || '#8B5CF6';
+  };
+
+  const getCategoryLabel = (slug: string) => {
+    return CATEGORIES.find((c) => c.slug === slug)?.label || slug;
+  };
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -30,9 +39,17 @@ const SidebarWidgets: React.FC = () => {
                 <h4 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white group-hover:text-[#37215F] dark:group-hover:text-purple-400 transition-colors line-clamp-2 leading-snug">
                   {article.title}
                 </h4>
-                <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500 mt-0.5 sm:mt-1 block">
-                  {formatDate(article.publishedAt)}
-                </span>
+                <div className="flex items-center gap-2 mt-1">
+                  <span
+                    className="inline-flex items-center rounded-full px-2 py-px text-[9px] sm:text-[10px] font-semibold text-white"
+                    style={{ backgroundColor: getCategoryColor(article.category) }}
+                  >
+                    {getCategoryLabel(article.category)}
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-gray-400 dark:text-gray-500">
+                    {formatDate(article.publishedAt)}
+                  </span>
+                </div>
               </div>
             </a>
           ))}
